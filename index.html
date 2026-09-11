@@ -1005,28 +1005,40 @@
 
       function onInput(e) {
         if (!pending) return;
+        const r = new Uint8Array(
+          e.data.buffer,
+          e.data.byteOffset,
+          e.data.byteLength,
+        );
+        // scarta risposte che non corrispondono alla richiesta in corso
+        // (0x84/0x85/0x86 condividono b1: distinguo con b0 low 2 bit + b1)
+        if (
+          pending.aLow != null &&
+          ((r[2] & 3) !== pending.aLow || r[3] !== pending.aHi)
+        )
+          return;
         const p = pending;
         pending = null;
         clearTimeout(p.t);
-        p.resolve(
-          new Uint8Array(e.data.buffer, e.data.byteOffset, e.data.byteLength),
-        );
+        p.resolve(r);
       }
       function send(body) {
         return new Promise((res) => {
           const d = new Uint8Array(63);
           d[0] = body.length;
           d.set(body, 1);
+          const aLow = body[1] & 3,
+            aHi = body[2];
           const t = setTimeout(() => {
-            if (pending) {
+            if (pending && pending.resolve === res) {
               pending = null;
               res(null);
             }
-          }, 350);
-          pending = { resolve: res, t };
+          }, 450);
+          pending = { resolve: res, t, aLow, aHi };
           device.sendReport(REPORT, d).catch(() => {
             clearTimeout(t);
-            if (pending) {
+            if (pending && pending.resolve === res) {
               pending = null;
               res(null);
             }
@@ -1204,8 +1216,17 @@
         lastPuffs = u16(c, 10);
         put("sticks", lastSticks);
         put("puffs", lastPuffs);
-        const sess = await cmd(get(0xc9, 0x85));
-        lastDur = u16(sess, 13);
+        // durata ultimo stick: ritenta e conserva l'ultimo valore valido
+        for (let i = 0; i < 3; i++) {
+          const sess = await cmd(get(0xc9, 0x85));
+          if (sess && (sess[2] & 0x20) === 0) {
+            const d = u16(sess, 13);
+            if (d && d > 0) {
+              lastDur = d;
+              break;
+            }
+          }
+        }
         computeSpend();
       }
       let lastSticks = null,
