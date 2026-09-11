@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IQOS ILUMA i ONE</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjEyIiB5PSI0LjUiIHdpZHRoPSI4IiBoZWlnaHQ9IjIzIiByeD0iNCIgZmlsbD0iI2U5ZTllYyIvPjxlbGxpcHNlIGN4PSIxNiIgY3k9IjkiIHJ4PSIyLjMiIHJ5PSIxLjIiIGZpbGw9IiMwMDAiLz48Y2lyY2xlIGN4PSIxNiIgY3k9IjIwIiByPSIxLjMiIGZpbGw9IiMwMDAiLz48L3N2Zz4="
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --void: #000;
+        --silver: #e9e9ec;
+        --ash: #7c7c82;
+        --faint: #48484d;
+        --line: rgba(255, 255, 255, 0.09);
+        --line-strong: rgba(255, 255, 255, 0.16);
+        --f: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background:
+          radial-gradient(
+            58% 46% at 50% 40%,
+            rgba(255, 255, 255, 0.07),
+            rgba(255, 255, 255, 0) 70%
+          ),
+          radial-gradient(
+            40% 26% at 50% 88%,
+            rgba(255, 255, 255, 0.035),
+            rgba(255, 255, 255, 0) 70%
+          ),
+          #000;
+        color: var(--silver);
+        font-family: var(--f);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+      .wrap {
+        height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto auto;
+        gap: clamp(6px, 1.6vh, 16px);
+        padding: clamp(14px, 2.6vh, 30px) 22px clamp(14px, 2.4vh, 26px);
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+
+      .head {
+        text-align: center;
+      }
+      h1 {
+        font-weight: 100;
+        letter-spacing: 0.02em;
+        font-size: clamp(1.4rem, 3.2vw, 2.1rem);
+        line-height: 1;
+      }
+      .tagline {
+        font-size: 0.72rem;
+        color: var(--ash);
+        margin-top: 7px;
+        letter-spacing: 0.03em;
+      }
+
+      .stage {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: clamp(16px, 3.5vw, 52px);
+        min-height: 0;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(18px, 3.2vh, 40px);
+      }
+      .col.left {
+        text-align: right;
+        align-items: flex-end;
+      }
+      .col.right {
+        text-align: left;
+        align-items: flex-start;
+      }
+      .metric .label {
+        font-size: 0.66rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        color: var(--ash);
+      }
+      .metric .value {
+        font-weight: 100;
+        font-size: clamp(1.6rem, 3vw, 2.5rem);
+        line-height: 1.04;
+        margin-top: 3px;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.4s;
+      }
+      .metric .value .u {
+        font-size: 0.82rem;
+        color: var(--ash);
+        margin-left: 5px;
+        font-weight: 400;
+      }
+      .metric .cap {
+        font-size: 0.62rem;
+        color: var(--faint);
+        margin-top: 4px;
+      }
+      .value.upd {
+        color: #fff;
+      }
+
+      .devwrap {
+        position: relative;
+        perspective: 1000px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .halo {
+        position: absolute;
+        top: 44%;
+        left: 50%;
+        width: 70%;
+        aspect-ratio: 1;
+        translate: -50% -50%;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.22),
+          transparent 62%
+        );
+        opacity: 0;
+        pointer-events: none;
+      }
+      body.live .halo {
+        animation: halo 1.3s ease-out;
+      }
+      @keyframes halo {
+        0% {
+          opacity: 0.55;
+          scale: 0.4;
+        }
+        100% {
+          opacity: 0;
+          scale: 1.7;
+        }
+      }
+      .device {
+        width: clamp(96px, 17vmin, 164px);
+        transition: transform 0.25s ease-out;
+        animation: float 7s ease-in-out infinite;
+        filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.6));
+      }
+      @keyframes float {
+        0%,
+        100% {
+          translate: 0 -5px;
+        }
+        50% {
+          translate: 0 7px;
+        }
+      }
+      .led {
+        fill: #26262b;
+        transition: fill 0.45s;
+      }
+      body.live .led {
+        fill: url(#ledg);
+      }
+      body.live #leds circle:nth-of-type(1) {
+        transition-delay: 0s;
+      }
+      body.live #leds circle:nth-of-type(2) {
+        transition-delay: 0.1s;
+      }
+      body.live #leds circle:nth-of-type(3) {
+        transition-delay: 0.2s;
+      }
+      body.live #leds circle:nth-of-type(4) {
+        transition-delay: 0.3s;
+      }
+      #ledGlow {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      body.live #ledGlow {
+        animation: ledpulse 2.2s ease-in-out infinite;
+      }
+      @keyframes ledpulse {
+        0%,
+        100% {
+          opacity: 0.12;
+          scale: 0.7;
+        }
+        50% {
+          opacity: 0.5;
+          scale: 1.2;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        body.live #ledGlow {
+          animation: none;
+          opacity: 0.35;
+        }
+      }
+      .serial {
+        margin-top: 16px;
+        font-size: 0.68rem;
+        letter-spacing: 0.22em;
+        color: var(--ash);
+        min-height: 1em;
+      }
+
+      .band {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: clamp(14px, 3vw, 44px);
+        border-top: 1px solid var(--line);
+        padding-top: clamp(12px, 2vh, 20px);
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(6px, 1.2vh, 12px);
+      }
+      .stack.r {
+        align-items: flex-end;
+        text-align: right;
+      }
+      .li {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .stack.r .li {
+        flex-direction: row-reverse;
+      }
+      .li .n {
+        font-weight: 300;
+        font-size: clamp(1rem, 1.8vw, 1.35rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+      }
+      .li .t {
+        font-size: 0.64rem;
+        color: var(--ash);
+        letter-spacing: 0.04em;
+      }
+      .spend {
+        text-align: center;
+      }
+      .spend .lab {
+        font-size: 0.66rem;
+        color: var(--ash);
+        letter-spacing: 0.06em;
+      }
+      .spend .big {
+        font-weight: 100;
+        font-size: clamp(2.4rem, 6vw, 4rem);
+        line-height: 1;
+        margin: 4px 0 8px;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.4s;
+      }
+      .spend .big.upd {
+        color: #fff;
+      }
+      .setline {
+        font-size: 0.72rem;
+        color: var(--ash);
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .setline input {
+        width: 3.1em;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid var(--line-strong);
+        color: var(--silver);
+        font-family: var(--f);
+        font-size: 0.8rem;
+        text-align: center;
+        padding: 1px 2px 2px;
+        -moz-appearance: textfield;
+      }
+      .setline input::-webkit-outer-spin-button,
+      .setline input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .setline input:focus {
+        outline: none;
+        border-bottom-color: #fff;
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      button {
+        font-family: var(--f);
+        font-size: 0.82rem;
+        letter-spacing: 0.03em;
+        font-weight: 500;
+        color: var(--silver);
+        background: transparent;
+        border: 1px solid var(--line-strong);
+        padding: 11px 26px;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+      button:hover:not(:disabled) {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+      }
+      button:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+      button.small {
+        padding: 8px 15px;
+        font-size: 0.75rem;
+      }
+      #connect {
+        padding: 13px 34px;
+        font-size: 0.9rem;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.72rem;
+        color: var(--ash);
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--faint);
+        transition: 0.3s;
+      }
+      .status.on {
+        color: var(--silver);
+      }
+      .status.on .dot {
+        background: #fff;
+        box-shadow: 0 0 8px #fff;
+      }
+      label.auto {
+        font-size: 0.72rem;
+        color: var(--ash);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .disclaimer {
+        text-align: center;
+        font-size: 0.64rem;
+        color: var(--faint);
+        letter-spacing: 0.02em;
+        margin-top: 10px;
+      }
+      .disclaimer b {
+        color: var(--ash);
+        font-weight: 500;
+      }
+      .msg {
+        position: fixed;
+        left: 50%;
+        bottom: 78px;
+        transform: translateX(-50%);
+        max-width: min(560px, 90vw);
+        text-align: center;
+        font-size: 0.78rem;
+        line-height: 1.55;
+        color: var(--ash);
+        background: #0a0a0a;
+        border: 1px solid var(--line);
+        padding: 12px 18px;
+        border-radius: 3px;
+        z-index: 20;
+      }
+      .msg code {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 0.74rem;
+        color: var(--silver);
+      }
+
+      /* reveal / hide-until-connected */
+      .col .metric,
+      .band,
+      .serial {
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease,
+          visibility 0.7s;
+      }
+      body.idle .col .metric,
+      body.idle .band,
+      body.idle .serial {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(12px);
+      }
+      .col.left .metric {
+        transition-delay: 0.05s;
+      }
+      .col.right .metric {
+        transition-delay: 0.14s;
+      }
+      .band {
+        transition-delay: 0.26s;
+      }
+      body.idle label.auto,
+      body.idle #details {
+        display: none;
+      }
+
+      .panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: min(360px, 86vw);
+        background: #070707;
+        border-left: 1px solid var(--line);
+        padding: 26px 24px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 30;
+        overflow-y: auto;
+      }
+      .panel.open {
+        transform: none;
+      }
+      .panel h2 {
+        font-weight: 300;
+        font-size: 1.05rem;
+        margin-bottom: 4px;
+      }
+      .panel .sub {
+        font-size: 0.7rem;
+        color: var(--ash);
+        margin-bottom: 20px;
+      }
+      .panel .x {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border: 0;
+        background: transparent;
+        color: var(--ash);
+        font-size: 1.4rem;
+        padding: 0;
+        width: auto;
+        cursor: pointer;
+      }
+      .panel .x:hover {
+        background: transparent;
+        color: #fff;
+      }
+      .srow {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 0;
+        border-top: 1px solid var(--line);
+        font-size: 0.85rem;
+      }
+      .srow .k {
+        color: var(--ash);
+      }
+      .srow .v {
+        text-align: right;
+      }
+      .panel details {
+        margin-top: 20px;
+      }
+      .panel summary {
+        cursor: pointer;
+        color: var(--faint);
+        font-size: 0.72rem;
+        letter-spacing: 0.04em;
+      }
+      pre {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 0.66rem;
+        line-height: 1.55;
+        color: var(--ash);
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 12px;
+        overflow: auto;
+        max-height: 200px;
+        margin-top: 12px;
+      }
+      .backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s;
+        z-index: 29;
+      }
+      .backdrop.on {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      [hidden] {
+        display: none !important;
+      }
+
+      @media (max-width: 720px) {
+        body {
+          overflow: auto;
+        }
+        .stage {
+          grid-template-columns: 1fr;
+        }
+        .col {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 24px 36px;
+          text-align: center !important;
+          align-items: center !important;
+        }
+        .col.left {
+          order: 2;
+        }
+        .devwrap {
+          order: 1;
+        }
+        .col.right {
+          order: 3;
+        }
+        .band {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          text-align: center;
+        }
+        .stack,
+        .stack.r {
+          align-items: center;
+          text-align: center;
+        }
+        .stack .li,
+        .stack.r .li {
+          flex-direction: row;
+          justify-content: center;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .device {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="idle">
+    <div class="wrap">
+      <div class="head">
+        <h1 id="model">IQOS</h1>
+        <div class="tagline" id="tagline">
+          Collega il device via cavo per leggerne lo stato
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="col left">
+          <div class="metric">
+            <div class="label">Batteria</div>
+            <div class="value" id="battery">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Tensione</div>
+            <div class="value" id="voltageM">—<span class="u">mV</span></div>
+          </div>
+        </div>
+
+        <div class="devwrap">
+          <div class="halo"></div>
+          <svg class="device" id="device" viewBox="0 0 200 500" xmlns="http://www.w3.org/2000/svg" aria-label="IQOS ILUMA i ONE">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#050506"/><stop offset=".05" stop-color="#0e0e12"/>
+      <stop offset=".14" stop-color="#26262c"/><stop offset=".32" stop-color="#4b4b55"/>
+      <stop offset=".45" stop-color="#6c6c77"/><stop offset=".5" stop-color="#5f5f6a"/>
+      <stop offset=".66" stop-color="#35353d"/><stop offset=".84" stop-color="#1a1b20"/>
+      <stop offset=".93" stop-color="#0d0d11"/><stop offset=".965" stop-color="#232329"/><stop offset="1" stop-color="#060608"/>
+    </linearGradient>
+    <linearGradient id="vshade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(255,255,255,.12)"/><stop offset=".1" stop-color="rgba(255,255,255,0)"/>
+      <stop offset=".8" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,.5)"/>
+    </linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0d0d11"/><stop offset=".14" stop-color="#2b2b32"/>
+      <stop offset=".45" stop-color="#74747f"/><stop offset=".5" stop-color="#82828d"/>
+      <stop offset=".66" stop-color="#3d3d45"/><stop offset=".93" stop-color="#101014"/><stop offset="1" stop-color="#070709"/>
+    </linearGradient>
+    <radialGradient id="ring" cx="50%" cy="38%" r="62%">
+      <stop offset="0" stop-color="#83838e"/><stop offset=".55" stop-color="#3a3a41"/><stop offset="1" stop-color="#121215"/>
+    </radialGradient>
+    <radialGradient id="hole" cx="50%" cy="42%" r="60%">
+      <stop offset="0" stop-color="#000"/><stop offset=".78" stop-color="#050506"/><stop offset="1" stop-color="#1c1c20"/>
+    </radialGradient>
+    <radialGradient id="btn" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#3c3c44"/><stop offset=".6" stop-color="#222227"/><stop offset="1" stop-color="#0c0c0f"/>
+    </radialGradient>
+    <radialGradient id="pool" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="rgba(255,255,255,.12)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <linearGradient id="spec" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(255,255,255,0)"/><stop offset=".2" stop-color="rgba(255,255,255,.85)"/>
+      <stop offset=".8" stop-color="rgba(255,255,255,.5)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <linearGradient id="ledg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#9fb8ff"/>
+    </linearGradient>
+    <clipPath id="bodyclip"><rect x="54" y="22" width="92" height="452" rx="34"/></clipPath>
+    <filter id="blur"><feGaussianBlur stdDeviation="3.2"/></filter>
+  </defs>
+  <ellipse cx="100" cy="488" rx="52" ry="8" fill="#000"/>
+  <ellipse cx="100" cy="485" rx="74" ry="16" fill="url(#pool)"/>
+  <rect x="54" y="22" width="92" height="452" rx="34" fill="url(#body)"/>
+  <rect x="54" y="22" width="92" height="452" rx="34" fill="url(#vshade)"/>
+  <rect x="54.5" y="22.5" width="91" height="451" rx="33.5" fill="none" stroke="rgba(0,0,0,.55)"/>
+  <rect x="55" y="23" width="90" height="450" rx="33" fill="none" stroke="rgba(255,255,255,.05)"/>
+  <rect x="72" y="70" width="24" height="360" rx="12" fill="url(#spec)" opacity=".22" filter="url(#blur)"/>
+  <rect x="79" y="80" width="5" height="330" rx="2.5" fill="url(#spec)" opacity=".7"/>
+  <path d="M141 74 Q144 130 144 250 Q144 370 141 426" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="2"/>
+  <g id="leds">
+    <rect id="ledGlow" x="89" y="98" width="22" height="72" rx="11" fill="#cfe0ff" opacity="0" filter="url(#blur)"/>
+    <circle class="led" cx="100" cy="108" r="3.4" fill="#26262b"/>
+    <circle class="led" cx="100" cy="124" r="3.4" fill="#26262b"/>
+    <circle class="led" cx="100" cy="140" r="3.4" fill="#26262b"/>
+    <circle class="led" cx="100" cy="156" r="3.4" fill="#26262b"/>
+  </g>
+  <rect x="84" y="184" width="32" height="52" rx="16" fill="#0a0a0d"/>
+  <rect x="85.5" y="185.5" width="29" height="49" rx="14.5" fill="url(#btn)"/>
+  <rect x="92" y="190" width="16" height="16" rx="8" fill="rgba(255,255,255,.06)"/>
+  <ellipse cx="100" cy="50" rx="33" ry="17" fill="url(#ring)"/>
+  <ellipse cx="100" cy="50" rx="25" ry="12" fill="url(#hole)"/>
+  <ellipse cx="100" cy="46" rx="16" ry="3.5" fill="rgba(255,255,255,.12)"/>
+  <g class="lid" clip-path="url(#bodyclip)">
+    <rect x="54" y="22" width="92" height="72" rx="34" fill="url(#cap)"/>
+    <rect x="54" y="22" width="92" height="72" rx="34" fill="url(#vshade)" opacity=".7"/>
+    <rect x="79" y="28" width="5" height="58" rx="2.5" fill="url(#spec)" opacity=".5"/>
+    <path d="M58 92 Q100 104 142 92" fill="none" stroke="rgba(0,0,0,.55)" stroke-width="1.6"/>
+    <path d="M58 90 Q100 102 142 90" fill="none" stroke="rgba(255,255,255,.08)"/>
+  </g>
+</svg>
+          <div class="serial" id="serial"></div>
+        </div>
+
+        <div class="col right">
+          <div class="metric">
+            <div class="label">Temperatura</div>
+            <div class="value" id="temp">—</div>
+            <div class="cap">resistenza elemento</div>
+          </div>
+          <div class="metric">
+            <div class="label">Stato</div>
+            <div class="value" id="stick" style="font-size: 1.3rem">—</div>
+            <div class="cap" id="errors"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="band">
+        <div class="stack">
+          <div class="li">
+            <span class="n" id="sticks">—</span
+            ><span class="t">stick fumati</span>
+          </div>
+          <div class="li">
+            <span class="n" id="puffs">—</span
+            ><span class="t">tiri totali</span>
+          </div>
+          <div class="li">
+            <span class="n" id="usage">—</span
+            ><span class="t">tempo d'uso</span>
+          </div>
+        </div>
+        <div class="spend">
+          <div class="lab">Speso finora</div>
+          <div class="big" id="spend">—</div>
+          <div class="setline">
+            Pacchetto
+            <input
+              id="packPrice"
+              type="number"
+              step="0.10"
+              min="0"
+              value="5.50"
+            />
+            € · da
+            <input id="packSize" type="number" step="1" min="1" value="20" />
+            stick
+          </div>
+        </div>
+        <div class="stack r">
+          <div class="li">
+            <span class="n" id="avgPuffs">—</span
+            ><span class="t">tiri per stick</span>
+          </div>
+          <div class="li">
+            <span class="n" id="lastDur">—</span
+            ><span class="t">durata ultimo stick</span>
+          </div>
+          <div class="li">
+            <span class="n" id="costPuff">—</span
+            ><span class="t">costo per tiro</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="connect">Collega IQOS</button>
+        <span class="status off" id="status"
+          ><span class="dot"></span
+          ><span id="statusText">non collegato</span></span
+        >
+        <label class="auto"
+          ><input type="checkbox" id="auto" checked /> aggiorna da solo</label
+        >
+        <button id="details" class="small">Dettagli</button>
+      </div>
+
+      <div class="disclaimer">
+        Funziona con la linea IQOS via cavo · testata solo su
+        <b>IQOS ILUMA i ONE</b> — su altri modelli alcuni dati potrebbero non
+        comparire
+      </div>
+    </div>
+
+    <div class="msg" id="msg" hidden></div>
+    <div class="msg" id="unsupported" hidden style="bottom: 20px">
+      Serve <b style="color: var(--silver)">Chrome</b> o
+      <b style="color: var(--silver)">Edge</b> (Safari e Firefox non hanno
+      WebHID).
+    </div>
+
+    <div class="backdrop" id="backdrop"></div>
+    <div class="panel" id="panel">
+      <button class="x" id="closePanel" aria-label="chiudi">×</button>
+      <h2>Dettagli</h2>
+      <div class="sub" id="fw">firmware —</div>
+      <div class="srow">
+        <span class="k">Luminosità</span
+        ><span class="v" id="brightness">—</span>
+      </div>
+      <div class="srow">
+        <span class="k">Vibrazione</span><span class="v" id="vibration">—</span>
+      </div>
+      <div class="srow">
+        <span class="k">FlexPuff</span><span class="v" id="flexpuff">—</span>
+      </div>
+      <div class="srow">
+        <span class="k">FlexBattery</span
+        ><span class="v" id="flexbattery">—</span>
+      </div>
+      <div class="srow">
+        <span class="k">Autostart</span><span class="v" id="autostart">—</span>
+      </div>
+      <div class="srow">
+        <span class="k">Pausa</span><span class="v" id="pausemode">—</span>
+      </div>
+      <div class="srow">
+        <span class="k">Vibrazione (test)</span
+        ><span class="v"
+          ><button id="vibrate" class="small" disabled>
+            Fai vibrare
+          </button></span
+        >
+      </div>
+      <details>
+        <summary>log grezzo</summary>
+        <pre id="log"></pre>
+      </details>
+    </div>
+
+    <script>
+      const VID = 0x2759,
+        PID = 0x0003,
+        REPORT = 0x3f;
+      const LC = { 0: 0, 1: 4, 2: 14, 3: 24 };
+      let device = null,
+        pending = null,
+        timer = null;
+
+      function crc8(b) {
+        let c = 0;
+        for (const x of b) {
+          c ^= x;
+          for (let i = 0; i < 8; i++)
+            c = c & 0x80 ? ((c << 1) ^ 0x07) & 0xff : (c << 1) & 0xff;
+        }
+        return c;
+      }
+      function get(net, S) {
+        const a = [S & 3, (S >> 2) & 0xff];
+        return [net, ...a, crc8(a)];
+      }
+      function log(m) {
+        const el = document.getElementById("log");
+        if (el)
+          el.textContent = (
+            new Date().toLocaleTimeString() +
+            "  " +
+            m +
+            "\n" +
+            el.textContent
+          ).slice(0, 6000);
+      }
+      function msg(t, err) {
+        const m = document.getElementById("msg");
+        m.hidden = false;
+        m.innerHTML = t;
+        m.style.color = err ? "#fff" : "var(--ash)";
+        log(t.replace(/<[^>]+>/g, ""));
+      }
+
+      function onInput(e) {
+        if (!pending) return;
+        const p = pending;
+        pending = null;
+        clearTimeout(p.t);
+        p.resolve(
+          new Uint8Array(e.data.buffer, e.data.byteOffset, e.data.byteLength),
+        );
+      }
+      function send(body) {
+        return new Promise((res) => {
+          const d = new Uint8Array(63);
+          d[0] = body.length;
+          d.set(body, 1);
+          const t = setTimeout(() => {
+            if (pending) {
+              pending = null;
+              res(null);
+            }
+          }, 350);
+          pending = { resolve: res, t };
+          device.sendReport(REPORT, d).catch(() => {
+            clearTimeout(t);
+            if (pending) {
+              pending = null;
+              res(null);
+            }
+          });
+        });
+      }
+      let queue = Promise.resolve();
+      function cmd(body) {
+        queue = queue.then(() => send(body));
+        return queue;
+      }
+
+      const u16 = (r, i) =>
+        r && r.length > 4 + i + 1 ? r[4 + i] | (r[4 + i + 1] << 8) : null;
+      const val8 = (r) => (r && r.length > 4 ? r[4] : null);
+      const ascii = (r) => {
+        if (!r) return null;
+        const n = LC[(r[2] >> 2) & 3] || 0;
+        let s = "";
+        for (let i = 0; i < n; i++) {
+          const c = r[4 + i];
+          if (c >= 32 && c < 127) s += String.fromCharCode(c);
+        }
+        return s.trim();
+      };
+
+      async function connect() {
+        if (!("hid" in navigator)) {
+          document.getElementById("unsupported").hidden = false;
+          return;
+        }
+        try {
+          msg("Apro la selezione device…");
+          // qualsiasi IQOS (Philip Morris VID), qualunque modello/PID
+          let ds = await navigator.hid.requestDevice({
+            filters: [{ vendorId: VID }],
+          });
+          if (!ds || !ds.length) {
+            msg(
+              "Finestra vuota o annullata: l'IQOS non compare. Controlla il cavo, o un altro programma lo sta usando.",
+              true,
+            );
+            return;
+          }
+          device = ds[0];
+          try {
+            if (!device.opened) await device.open();
+          } catch (oe) {
+            msg(
+              "Impossibile aprire il device: è già in uso da un altro contesto. " +
+                "Chiudi le <b>altre schede</b> che lo usano (es. localhost), l'app IQOS o eventuali script, " +
+                "poi <b>stacca e riattacca il cavo</b> e riprova.",
+              true,
+            );
+            return;
+          }
+          if (!device.opened) {
+            msg(
+              "Apertura non riuscita: device occupato o permesso negato.",
+              true,
+            );
+            return;
+          }
+          device.addEventListener("inputreport", onInput);
+          device.addEventListener("disconnect", () => {
+            setStatus(false);
+            document.body.classList.add("idle");
+            document.body.classList.remove("live");
+            msg("Device scollegato.", true);
+          });
+          setStatus(true);
+          document.getElementById("msg").hidden = true;
+          document.getElementById("tagline").textContent =
+            "In ascolto — aggiornamento continuo";
+          document.getElementById("vibrate").disabled = false;
+          document.body.classList.remove("idle");
+          void document.body.offsetWidth;
+          document.body.classList.add("live");
+          await readStatic();
+          await readLive();
+          schedule();
+        } catch (err) {
+          msg(
+            "Errore: " +
+              err.name +
+              " — " +
+              err.message +
+              "<br>Se è <code>SecurityError</code> apri da <code>http://localhost:8787</code>; se <code>NotAllowedError</code> hai chiuso la finestra di scelta.",
+            true,
+          );
+        }
+      }
+      function setStatus(on) {
+        const s = document.getElementById("status");
+        s.className = "status " + (on ? "on" : "off");
+        document.getElementById("statusText").textContent = on
+          ? "collegato"
+          : "non collegato";
+        document.getElementById("connect").textContent = on
+          ? "Ricollega"
+          : "Collega IQOS";
+      }
+
+      function put(id, v) {
+        const e = document.getElementById(id);
+        if (e) e.textContent = v == null ? "—" : v;
+      }
+      function putMetric(id, v, unit) {
+        const e = document.getElementById(id);
+        if (!e) return;
+        if (v == null) {
+          e.innerHTML = "—";
+          return;
+        }
+        e.innerHTML = v + (unit ? ' <span class="u">' + unit + "</span>" : "");
+        e.classList.remove("upd");
+        void e.offsetWidth;
+        e.classList.add("upd");
+        setTimeout(() => e.classList.remove("upd"), 450);
+      }
+
+      async function readStatic() {
+        const serial = ascii(await cmd(get(0xc0, 0x0c)));
+        document.getElementById("serial").textContent = serial || "";
+        const modelCode = ascii(await cmd(get(0xc9, 0x88)));
+        document.getElementById("tagline").textContent = modelCode
+          ? "In ascolto · modello " + modelCode
+          : "In ascolto — aggiornamento continuo";
+        const fw = await cmd([0xc0, 0x00, 0x00, crc8([0, 0])]);
+        document.getElementById("fw").textContent =
+          "firmware " +
+          (fw
+            ? Array.from(fw.slice(4, 10))
+                .map((x) => x.toString(16).padStart(2, "0"))
+                .join(" ")
+            : "—");
+        put("brightness", val8(await cmd([0xc0, 0x02, 0x23, 0xc3])));
+        put("vibration", val8(await cmd([0xc9, 0x00, 0x23, 0xe9])));
+        put("flexbattery", val8(await cmd([0xc9, 0x00, 0x25, 0xfb])));
+        const fp = await cmd([0xd2, 0x05, 0x22, 0x03, 0x00, 0x00, 0x00, 0x17]);
+        put("flexpuff", fp ? (val8(fp) ? "attivo" : "spento") : "—");
+        put(
+          "autostart",
+          val8(await cmd([0xc9, 0x07, 0x24, 0x01, 0x00, 0x00, 0x00, 0x22])),
+        );
+        put(
+          "pausemode",
+          val8(await cmd([0xc9, 0x07, 0x24, 0x02, 0x00, 0x00, 0x00, 0x18])),
+        );
+      }
+      async function readLive() {
+        putMetric("battery", u16(await cmd(get(0xc0, 0x90)), 0), "%");
+        putMetric("voltageM", u16(await cmd(get(0xc9, 0x83)), 0), "mV");
+        putMetric("temp", u16(await cmd(get(0xc0, 0x84)), 0), "");
+        const s = val8(await cmd(get(0xc0, 0x81)));
+        put(
+          "stick",
+          s == null
+            ? "—"
+            : s === 0x16
+              ? "stick inserito"
+              : s === 0x01
+                ? "vuoto"
+                : "0x" + s.toString(16),
+        );
+        const e = u16(await cmd(get(0xc0, 0x82)), 0);
+        document.getElementById("errors").textContent =
+          e == null
+            ? ""
+            : e === 0
+              ? "nessun errore"
+              : "errore 0x" + e.toString(16);
+        const c = await cmd(get(0xc9, 0x86));
+        lastSticks = u16(c, 0);
+        lastPuffs = u16(c, 10);
+        put("sticks", lastSticks);
+        put("puffs", lastPuffs);
+        put("usage", u16(c, 6));
+        const sess = await cmd(get(0xc9, 0x85));
+        lastDur = u16(sess, 13);
+        computeSpend();
+      }
+      let lastSticks = null,
+        lastPuffs = null,
+        lastDur = null;
+      const eur = (n, dec) =>
+        new Intl.NumberFormat("it-IT", {
+          style: "currency",
+          currency: "EUR",
+          minimumFractionDigits: dec,
+          maximumFractionDigits: dec,
+        }).format(n);
+      function flash(el) {
+        el.classList.remove("upd");
+        void el.offsetWidth;
+        el.classList.add("upd");
+        setTimeout(() => el.classList.remove("upd"), 450);
+      }
+      function computeSpend() {
+        const price = parseFloat(document.getElementById("packPrice").value);
+        const size = parseInt(document.getElementById("packSize").value, 10);
+        const perStick = price && size ? price / size : null;
+        const el = document.getElementById("spend");
+        if (lastSticks == null || !perStick) {
+          el.textContent = "—";
+        } else {
+          el.textContent = eur(lastSticks * perStick, 0);
+          flash(el);
+        }
+        const avg = lastPuffs && lastSticks ? lastPuffs / lastSticks : null;
+        put("avgPuffs", avg == null ? "—" : avg.toFixed(1));
+        if (lastDur == null) put("lastDur", "—");
+        else {
+          const s = Math.round(lastDur / 4);
+          put(
+            "lastDur",
+            Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"),
+          );
+        }
+        put("costPuff", avg && perStick ? eur(perStick / avg, 2) : "—");
+      }
+      function schedule() {
+        clearTimeout(timer);
+        if (document.getElementById("auto").checked && device && device.opened)
+          timer = setTimeout(async () => {
+            await readLive();
+            schedule();
+          }, 1500);
+      }
+      async function vibrate() {
+        log("vibrazione START");
+        await cmd([0xc0, 0x45, 0x22, 0x01, 0x1e, 0x00, 0x00, 0xc3]);
+        setTimeout(
+          () => cmd([0xc0, 0x45, 0x22, 0x00, 0x1e, 0x00, 0x00, 0xd5]),
+          1200,
+        );
+      }
+
+      const stage = document.querySelector(".stage"),
+        dev = document.getElementById("device");
+      if (!window.matchMedia("(prefers-reduced-motion:reduce)").matches) {
+        stage.addEventListener("pointermove", (ev) => {
+          const r = stage.getBoundingClientRect();
+          const x = (ev.clientX - r.left) / r.width - 0.5,
+            y = (ev.clientY - r.top) / r.height - 0.5;
+          dev.style.transform = `rotateY(${x * 18}deg) rotateX(${-y * 12}deg)`;
+        });
+        stage.addEventListener(
+          "pointerleave",
+          () => (dev.style.transform = ""),
+        );
+      }
+      function openPanel(o) {
+        document.getElementById("panel").classList.toggle("open", o);
+        document.getElementById("backdrop").classList.toggle("on", o);
+      }
+
+      document.getElementById("connect").onclick = connect;
+      document.getElementById("vibrate").onclick = vibrate;
+      document.getElementById("auto").onchange = schedule;
+      document.getElementById("packPrice").oninput = computeSpend;
+      document.getElementById("packSize").oninput = computeSpend;
+      document.getElementById("details").onclick = () => openPanel(true);
+      document.getElementById("closePanel").onclick = () => openPanel(false);
+      document.getElementById("backdrop").onclick = () => openPanel(false);
+      if (!("hid" in navigator)) {
+        document.getElementById("unsupported").hidden = false;
+        document.getElementById("connect").disabled = true;
+      }
+    </script>
+  </body>
+</html>
