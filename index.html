@@ -869,7 +869,7 @@
           </div>
           <div class="li">
             <span class="n" id="usage">—</span
-            ><span class="t" data-i18n="smokedTime">smoked time (est.)</span>
+            ><span class="t" data-i18n="smokedTime">smoked time</span>
           </div>
         </div>
         <div class="spend">
@@ -992,7 +992,7 @@
           battery: "Batteria", voltage: "Tensione", temperature: "Temperatura",
           elemResist: "resistenza elemento", state: "Stato",
           sticksSmoked: "stick fumati", totalPuffs: "tiri totali",
-          smokedTime: "tempo fumato (stima)", spentSoFar: "Speso finora",
+          smokedTime: "tempo fumato", spentSoFar: "Speso finora",
           pack: "Pacchetto", packOf: "· da", sticksUnit: "stick",
           puffsPerStick: "tiri per stick", lastStickDur: "durata ultimo stick",
           costPerPuff: "costo per tiro", connect: "Collega IQOS",
@@ -1015,7 +1015,7 @@
           battery: "Battery", voltage: "Voltage", temperature: "Temperature",
           elemResist: "element resistance", state: "State",
           sticksSmoked: "sticks smoked", totalPuffs: "total puffs",
-          smokedTime: "smoked time (est.)", spentSoFar: "Spent so far",
+          smokedTime: "smoked time", spentSoFar: "Spent so far",
           pack: "Pack", packOf: "· of", sticksUnit: "sticks",
           puffsPerStick: "puffs per stick", lastStickDur: "last stick duration",
           costPerPuff: "cost per puff", connect: "Connect IQOS",
@@ -1292,6 +1292,9 @@
         const c = await cmd(get(0xc9, 0x86));
         lastSticks = u16(c, 0);
         lastPuffs = u16(c, 10);
+        // tempo d'uso a vita: u32 spezzato (off6 basso, off8 alto), in 1/4 s
+        lastTimeQs =
+          c && u16(c, 6) != null ? (u16(c, 8) << 16) | u16(c, 6) : null;
         put("sticks", lastSticks);
         put("puffs", lastPuffs);
         // durata ultimo stick: ritenta e conserva l'ultimo valore valido
@@ -1309,7 +1312,8 @@
       }
       let lastSticks = null,
         lastPuffs = null,
-        lastDur = null;
+        lastDur = null,
+        lastTimeQs = null;
       const CCY_LOCALE = {
         EUR: "it-IT", USD: "en-US", GBP: "en-GB", TRY: "tr-TR",
         CHF: "de-CH", PLN: "pl-PL", JPY: "ja-JP",
@@ -1346,10 +1350,7 @@
         put("avgPuffs", avg == null ? "—" : avg.toFixed(1));
         const stickSec = lastDur ? lastDur / 4 : null;
         put("lastDur", stickSec == null ? "—" : mmss(stickSec));
-        put(
-          "usage",
-          stickSec && realSticks ? "~" + fmtDur(realSticks * stickSec) : "—",
-        );
+        put("usage", lastTimeQs ? fmtDur(lastTimeQs / 4) : "—");
         put("costPuff", avg && perStick ? money(perStick / avg, 2) : "—");
       }
       function mmss(sec) {
