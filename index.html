@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>IQOS ILUMA i ONE</title>
+    <title>iqos-scope</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -872,9 +872,23 @@
               min="0"
               value="5.50"
             />
-            € · da
+            <select id="currency" aria-label="valuta">
+              <option value="EUR">€ EUR</option>
+              <option value="USD">$ USD</option>
+              <option value="GBP">£ GBP</option>
+              <option value="TRY">₺ TRY</option>
+              <option value="CHF">CHF</option>
+              <option value="PLN">zł PLN</option>
+              <option value="JPY">¥ JPY</option>
+            </select>
+            · da
             <input id="packSize" type="number" step="1" min="1" value="20" />
             stick
+          </div>
+          <div class="setline">
+            Vibrazioni di test da scontare
+            <input id="phantom" type="number" step="1" min="0" value="0" />
+            <span id="phantomNote" class="pnote" hidden></span>
           </div>
         </div>
         <div class="stack r">
@@ -1228,10 +1242,17 @@
       let lastSticks = null,
         lastPuffs = null,
         lastDur = null;
-      const eur = (n, dec) =>
-        new Intl.NumberFormat("it-IT", {
+      const CCY_LOCALE = {
+        EUR: "it-IT", USD: "en-US", GBP: "en-GB", TRY: "tr-TR",
+        CHF: "de-CH", PLN: "pl-PL", JPY: "ja-JP",
+      };
+      let currency =
+        (() => { try { return localStorage.getItem("iqos_ccy"); } catch (e) { return null; } })() ||
+        "EUR";
+      const money = (n, dec) =>
+        new Intl.NumberFormat(CCY_LOCALE[currency] || "it-IT", {
           style: "currency",
-          currency: "EUR",
+          currency,
           minimumFractionDigits: dec,
           maximumFractionDigits: dec,
         }).format(n);
@@ -1245,24 +1266,34 @@
         const price = parseFloat(document.getElementById("packPrice").value);
         const size = parseInt(document.getElementById("packSize").value, 10);
         const perStick = price && size ? price / size : null;
+        // le vibrazioni di test gonfiano il contatore stick del device: le sottraggo
+        const phantom = Math.max(0, parseInt(document.getElementById("phantom").value, 10) || 0);
+        const realSticks =
+          lastSticks == null ? null : Math.max(0, lastSticks - phantom);
+        const note = document.getElementById("phantomNote");
+        if (phantom > 0 && lastSticks != null) {
+          note.hidden = false;
+          note.textContent =
+            "— " + phantom + " di test = " + realSticks + " reali";
+        } else {
+          note.hidden = true;
+        }
         const el = document.getElementById("spend");
-        if (lastSticks == null || !perStick) {
+        if (realSticks == null || !perStick) {
           el.textContent = "—";
         } else {
-          el.textContent = eur(lastSticks * perStick, 0);
+          el.textContent = money(realSticks * perStick, 0);
           flash(el);
         }
-        const avg = lastPuffs && lastSticks ? lastPuffs / lastSticks : null;
+        const avg = lastPuffs && realSticks ? lastPuffs / realSticks : null;
         put("avgPuffs", avg == null ? "—" : avg.toFixed(1));
-        // durata reale dell'ultimo stick (secondi, campo /4)
         const stickSec = lastDur ? lastDur / 4 : null;
         put("lastDur", stickSec == null ? "—" : mmss(stickSec));
-        // tempo fumato stimato = stick × durata tipica (dall'ultimo stick)
         put(
           "usage",
-          stickSec && lastSticks ? "~" + fmtDur(lastSticks * stickSec) : "—",
+          stickSec && realSticks ? "~" + fmtDur(realSticks * stickSec) : "—",
         );
-        put("costPuff", avg && perStick ? eur(perStick / avg, 2) : "—");
+        put("costPuff", avg && perStick ? money(perStick / avg, 2) : "—");
       }
       function mmss(sec) {
         sec = Math.round(sec);
@@ -1301,6 +1332,10 @@
           return cmd([0xc0, ...app, crc8(app)]);
         };
         await wr([0x16, st[1], st[2], st[3]]);
+        // ogni impulso incrementa il contatore stick del device: lo scalo dalla spesa
+        const ph = document.getElementById("phantom");
+        ph.value = (parseInt(ph.value, 10) || 0) + 1;
+        computeSpend();
         setTimeout(() => {
           wr(st);
           log("vibrazione: stato ripristinato");
@@ -1331,6 +1366,16 @@
       document.getElementById("auto").onchange = schedule;
       document.getElementById("packPrice").oninput = computeSpend;
       document.getElementById("packSize").oninput = computeSpend;
+      document.getElementById("phantom").oninput = computeSpend;
+      (function initCurrency() {
+        const sel = document.getElementById("currency");
+        sel.value = currency;
+        sel.onchange = () => {
+          currency = sel.value;
+          try { localStorage.setItem("iqos_ccy", currency); } catch (e) {}
+          computeSpend();
+        };
+      })();
       document.getElementById("details").onclick = () => openPanel(true);
       document.getElementById("closePanel").onclick = () => openPanel(false);
       document.getElementById("backdrop").onclick = () => openPanel(false);
@@ -1339,5 +1384,7 @@
         document.getElementById("connect").disabled = true;
       }
     </script>
+    <!-- Vercel Web Analytics (sito statico) -->
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>
