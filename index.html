@@ -582,25 +582,37 @@
           animation: none;
         }
       }
+      .dd{position:relative;display:inline-block}
+      .dd-btn{background:transparent;border:0;border-bottom:1px solid var(--line-strong);color:var(--silver);font:inherit;font-size:.8rem;padding:1px 15px 2px 4px;cursor:pointer;position:relative}
+      .dd-btn::after{content:"";position:absolute;right:3px;top:45%;width:4px;height:4px;border-right:1px solid var(--ash);border-bottom:1px solid var(--ash);transform:translateY(-50%) rotate(45deg)}
+      .dd.open .dd-btn,.dd-btn:focus{outline:none;border-bottom-color:#fff}
+      .dd-menu{position:absolute;z-index:50;left:0;bottom:calc(100% + 6px);margin:0;padding:4px;list-style:none;background:#0d0d10;border:1px solid var(--line-strong);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.55)}
+      .dd-menu li{padding:5px 12px 5px 10px;border-radius:5px;font-size:.82rem;color:var(--silver);white-space:nowrap;cursor:pointer}
+      .dd-menu li:hover{background:var(--line)}
+      .dd-menu li[aria-selected="true"]{color:#fff;background:var(--line-strong)}
+      #ddLang .dd-menu{bottom:calc(100% + 6px);left:auto;right:0}
+      .metric .value{font-variant-numeric:tabular-nums}
+      .setline{margin-top:7px}
+      .setline+.setline{margin-top:5px}
     </style>
   </head>
   <body class="idle">
     <div class="wrap">
       <div class="head">
         <h1 id="model">IQOS</h1>
-        <div class="tagline" id="tagline">
-          Collega il device via cavo per leggerne lo stato
+        <div class="tagline" id="tagline" data-i18n="tagline_idle">
+          Connect the device by cable to read its state
         </div>
       </div>
 
       <div class="stage">
         <div class="col left">
           <div class="metric">
-            <div class="label">Batteria</div>
+            <div class="label" data-i18n="battery">Battery</div>
             <div class="value" id="battery">—</div>
           </div>
           <div class="metric">
-            <div class="label">Tensione</div>
+            <div class="label" data-i18n="voltage">Voltage</div>
             <div class="value" id="voltageM">—<span class="u">mV</span></div>
           </div>
         </div>
@@ -833,12 +845,12 @@
 
         <div class="col right">
           <div class="metric">
-            <div class="label">Temperatura</div>
+            <div class="label" data-i18n="temperature">Temperature</div>
             <div class="value" id="temp">—</div>
-            <div class="cap">resistenza elemento</div>
+            <div class="cap" data-i18n="elemResist">element resistance</div>
           </div>
           <div class="metric">
-            <div class="label">Stato</div>
+            <div class="label" data-i18n="state">State</div>
             <div class="value" id="stick" style="font-size: 1.3rem">—</div>
             <div class="cap" id="errors"></div>
           </div>
@@ -849,101 +861,97 @@
         <div class="stack">
           <div class="li">
             <span class="n" id="sticks">—</span
-            ><span class="t">stick fumati</span>
+            ><span class="t" data-i18n="sticksSmoked">sticks smoked</span>
           </div>
           <div class="li">
             <span class="n" id="puffs">—</span
-            ><span class="t">tiri totali</span>
+            ><span class="t" data-i18n="totalPuffs">total puffs</span>
           </div>
           <div class="li">
             <span class="n" id="usage">—</span
-            ><span class="t">tempo fumato (stima)</span>
+            ><span class="t" data-i18n="smokedTime">smoked time (est.)</span>
           </div>
         </div>
         <div class="spend">
-          <div class="lab">Speso finora</div>
+          <div class="lab" data-i18n="spentSoFar">Spent so far</div>
           <div class="big" id="spend">—</div>
           <div class="setline">
-            Pacchetto
-            <input
-              id="packPrice"
-              type="number"
-              step="0.10"
-              min="0"
-              value="5.50"
-            />
-            <select id="currency" aria-label="valuta">
-              <option value="EUR">€ EUR</option>
-              <option value="USD">$ USD</option>
-              <option value="GBP">£ GBP</option>
-              <option value="TRY">₺ TRY</option>
-              <option value="CHF">CHF</option>
-              <option value="PLN">zł PLN</option>
-              <option value="JPY">¥ JPY</option>
-            </select>
-            · da
+            <span data-i18n="pack">Pack</span>
+            <input id="packPrice" type="number" step="0.10" min="0" value="5.50" />
+            <span class="dd" id="ddCcy" data-dd>
+              <button type="button" class="dd-btn">€ EUR</button>
+              <ul class="dd-menu" hidden>
+                <li data-v="EUR">€ EUR</li>
+                <li data-v="USD">$ USD</li>
+                <li data-v="GBP">£ GBP</li>
+                <li data-v="TRY">₺ TRY</li>
+                <li data-v="CHF">CHF</li>
+                <li data-v="PLN">zł PLN</li>
+                <li data-v="JPY">¥ JPY</li>
+              </ul>
+            </span>
+            <span data-i18n="packOf">· of</span>
             <input id="packSize" type="number" step="1" min="1" value="20" />
-            stick
-          </div>
-          <div class="setline">
-            Vibrazioni di test da scontare
-            <input id="phantom" type="number" step="1" min="0" value="0" />
-            <span id="phantomNote" class="pnote" hidden></span>
+            <span data-i18n="sticksUnit">sticks</span>
           </div>
         </div>
         <div class="stack r">
           <div class="li">
             <span class="n" id="avgPuffs">—</span
-            ><span class="t">tiri per stick</span>
+            ><span class="t" data-i18n="puffsPerStick">puffs per stick</span>
           </div>
           <div class="li">
             <span class="n" id="lastDur">—</span
-            ><span class="t">durata ultimo stick</span>
+            ><span class="t" data-i18n="lastStickDur">last stick duration</span>
           </div>
           <div class="li">
             <span class="n" id="costPuff">—</span
-            ><span class="t">costo per tiro</span>
+            ><span class="t" data-i18n="costPerPuff">cost per puff</span>
           </div>
         </div>
       </div>
 
       <div class="controls">
-        <button id="connect">Collega IQOS</button>
+        <button id="connect" data-i18n="connect">Connect IQOS</button>
         <span class="status off" id="status"
           ><span class="dot"></span
-          ><span id="statusText">non collegato</span></span
+          ><span id="statusText" data-i18n="notConnected">not connected</span></span
         >
         <label class="auto"
-          ><input type="checkbox" id="auto" checked /> aggiorna da solo</label
+          ><input type="checkbox" id="auto" checked /> <span data-i18n="autoUpdate">auto-update</span></label
         >
-        <button id="details" class="small">Dettagli</button>
+        <button id="details" class="small" data-i18n="details">Details</button>
+        <span class="dd" id="ddLang" data-dd>
+          <button type="button" class="dd-btn">EN</button>
+          <ul class="dd-menu" hidden>
+            <li data-v="it">Italiano</li>
+            <li data-v="en">English</li>
+          </ul>
+        </span>
       </div>
 
-      <div class="disclaimer">
-        Funziona con la linea IQOS via cavo · testata solo su
-        <b>IQOS ILUMA i ONE</b> — su altri modelli alcuni dati potrebbero non
-        comparire
+      <div class="disclaimer" data-i18n="disclaimer">
+        Works with the IQOS line over cable · tested only on
+        IQOS ILUMA i ONE — some fields may be missing on other models
       </div>
     </div>
 
     <div class="msg" id="msg" hidden></div>
-    <div class="msg" id="unsupported" hidden style="bottom: 20px">
-      Serve <b style="color: var(--silver)">Chrome</b> o
-      <b style="color: var(--silver)">Edge</b> (Safari e Firefox non hanno
-      WebHID).
+    <div class="msg" id="unsupported" hidden style="bottom: 20px" data-i18n="unsupported">
+      Needs Chrome or Edge (Safari and Firefox have no WebHID).
     </div>
 
     <div class="backdrop" id="backdrop"></div>
     <div class="panel" id="panel">
       <button class="x" id="closePanel" aria-label="chiudi">×</button>
-      <h2>Dettagli</h2>
+      <h2 data-i18n="details">Details</h2>
       <div class="sub" id="fw">firmware —</div>
       <div class="srow">
-        <span class="k">Luminosità</span
+        <span class="k" data-i18n="brightness">Brightness</span
         ><span class="v" id="brightness">—</span>
       </div>
       <div class="srow">
-        <span class="k">Vibrazione</span><span class="v" id="vibration">—</span>
+        <span class="k" data-i18n="vibration">Vibration</span><span class="v" id="vibration">—</span>
       </div>
       <div class="srow">
         <span class="k">FlexPuff</span><span class="v" id="flexpuff">—</span>
@@ -956,18 +964,10 @@
         <span class="k">Autostart</span><span class="v" id="autostart">—</span>
       </div>
       <div class="srow">
-        <span class="k">Pausa</span><span class="v" id="pausemode">—</span>
-      </div>
-      <div class="srow">
-        <span class="k">Vibrazione (test)</span
-        ><span class="v"
-          ><button id="vibrate" class="small" disabled>
-            Fai vibrare
-          </button></span
-        >
+        <span class="k" data-i18n="pause">Pause</span><span class="v" id="pausemode">—</span>
       </div>
       <details>
-        <summary>log grezzo</summary>
+        <summary data-i18n="rawLog">raw log</summary>
         <pre id="log"></pre>
       </details>
     </div>
@@ -980,6 +980,75 @@
       let device = null,
         pending = null,
         timer = null;
+      let connected = false,
+        modelCode = "",
+        stickRaw = null,
+        errRaw = null,
+        fpRaw = null;
+
+      const I18N = {
+        it: {
+          tagline_idle: "Collega il device via cavo per leggerne lo stato",
+          battery: "Batteria", voltage: "Tensione", temperature: "Temperatura",
+          elemResist: "resistenza elemento", state: "Stato",
+          sticksSmoked: "stick fumati", totalPuffs: "tiri totali",
+          smokedTime: "tempo fumato (stima)", spentSoFar: "Speso finora",
+          pack: "Pacchetto", packOf: "· da", sticksUnit: "stick",
+          puffsPerStick: "tiri per stick", lastStickDur: "durata ultimo stick",
+          costPerPuff: "costo per tiro", connect: "Collega IQOS",
+          reconnect: "Ricollega", notConnected: "non collegato",
+          connected: "collegato", autoUpdate: "aggiorna da solo",
+          details: "Dettagli", brightness: "Luminosità", vibration: "Vibrazione",
+          pause: "Pausa", rawLog: "log grezzo",
+          disclaimer: "Funziona con la linea IQOS via cavo · testata solo su IQOS ILUMA i ONE — su altri modelli alcuni dati potrebbero non comparire",
+          unsupported: "Serve Chrome o Edge (Safari e Firefox non hanno WebHID).",
+          listening: "In ascolto — aggiornamento continuo",
+          listeningModel: "In ascolto · modello ",
+          stickInserted: "stick inserito", empty: "vuoto",
+          noError: "nessun errore", errorPrefix: "errore",
+          fpActive: "attivo", fpOff: "spento",
+          deviceDisconnected: "Device scollegato.", errorLabel: "Errore",
+          securityHint: '<br>Se è <code>SecurityError</code> apri da <code>http://localhost:8787</code>; se <code>NotAllowedError</code> hai chiuso la finestra di scelta.',
+        },
+        en: {
+          tagline_idle: "Connect the device by cable to read its state",
+          battery: "Battery", voltage: "Voltage", temperature: "Temperature",
+          elemResist: "element resistance", state: "State",
+          sticksSmoked: "sticks smoked", totalPuffs: "total puffs",
+          smokedTime: "smoked time (est.)", spentSoFar: "Spent so far",
+          pack: "Pack", packOf: "· of", sticksUnit: "sticks",
+          puffsPerStick: "puffs per stick", lastStickDur: "last stick duration",
+          costPerPuff: "cost per puff", connect: "Connect IQOS",
+          reconnect: "Reconnect", notConnected: "not connected",
+          connected: "connected", autoUpdate: "auto-update",
+          details: "Details", brightness: "Brightness", vibration: "Vibration",
+          pause: "Pause", rawLog: "raw log",
+          disclaimer: "Works with the IQOS line over cable · tested only on IQOS ILUMA i ONE — some fields may be missing on other models",
+          unsupported: "Needs Chrome or Edge (Safari and Firefox have no WebHID).",
+          listening: "Listening — live updates",
+          listeningModel: "Listening · model ",
+          stickInserted: "stick inserted", empty: "empty",
+          noError: "no errors", errorPrefix: "error",
+          fpActive: "on", fpOff: "off",
+          deviceDisconnected: "Device disconnected.", errorLabel: "Error",
+          securityHint: '<br>If it is <code>SecurityError</code> open from <code>http://localhost:8787</code>; if <code>NotAllowedError</code> you closed the chooser dialog.',
+        },
+      };
+      let lang =
+        (() => { try { return localStorage.getItem("iqos_lang"); } catch (e) {} })() ||
+        ((navigator.language || "it").slice(0, 2) === "en" ? "en" : "it");
+      const t = (k) => (I18N[lang] && I18N[lang][k]) || I18N.it[k] || k;
+      function applyLang() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach((e) => {
+          e.textContent = t(e.getAttribute("data-i18n"));
+        });
+        renderTagline();
+        renderStatus();
+        renderStick();
+        renderErrors();
+        renderFp();
+      }
 
       function crc8(b) {
         let c = 0;
@@ -1117,13 +1186,11 @@
             setStatus(false);
             document.body.classList.add("idle");
             document.body.classList.remove("live");
-            msg("Device scollegato.", true);
+            msg(t("deviceDisconnected"), true);
           });
           setStatus(true);
           document.getElementById("msg").hidden = true;
-          document.getElementById("tagline").textContent =
-            "In ascolto — aggiornamento continuo";
-          document.getElementById("vibrate").disabled = false;
+          renderTagline();
           document.body.classList.remove("idle");
           void document.body.offsetWidth;
           document.body.classList.add("live");
@@ -1132,24 +1199,40 @@
           schedule();
         } catch (err) {
           msg(
-            "Errore: " +
-              err.name +
-              " — " +
-              err.message +
-              "<br>Se è <code>SecurityError</code> apri da <code>http://localhost:8787</code>; se <code>NotAllowedError</code> hai chiuso la finestra di scelta.",
+            t("errorLabel") + ": " + err.name + " — " + err.message + t("securityHint"),
             true,
           );
         }
       }
       function setStatus(on) {
-        const s = document.getElementById("status");
-        s.className = "status " + (on ? "on" : "off");
-        document.getElementById("statusText").textContent = on
-          ? "collegato"
-          : "non collegato";
-        document.getElementById("connect").textContent = on
-          ? "Ricollega"
-          : "Collega IQOS";
+        connected = on;
+        document.getElementById("status").className = "status " + (on ? "on" : "off");
+        renderStatus();
+      }
+      function renderStatus() {
+        document.getElementById("statusText").textContent = t(connected ? "connected" : "notConnected");
+        document.getElementById("connect").textContent = t(connected ? "reconnect" : "connect");
+      }
+      function renderTagline() {
+        document.getElementById("tagline").textContent = !connected
+          ? t("tagline_idle")
+          : modelCode
+            ? t("listeningModel") + modelCode
+            : t("listening");
+      }
+      function renderStick() {
+        const s = stickRaw;
+        put("stick", s == null ? "—"
+          : s === 0x16 ? t("stickInserted")
+          : s === 0x01 ? t("empty")
+          : "0x" + s.toString(16));
+      }
+      function renderErrors() {
+        document.getElementById("errors").textContent =
+          errRaw == null ? "" : errRaw === 0 ? t("noError") : t("errorPrefix") + " 0x" + errRaw.toString(16);
+      }
+      function renderFp() {
+        put("flexpuff", fpRaw == null ? "—" : fpRaw ? t("fpActive") : t("fpOff"));
       }
 
       function put(id, v) {
@@ -1173,10 +1256,8 @@
       async function readStatic() {
         const serial = ascii(await cmd(get(0xc0, 0x0c)));
         document.getElementById("serial").textContent = serial || "";
-        const modelCode = ascii(await cmd(get(0xc9, 0x88)));
-        document.getElementById("tagline").textContent = modelCode
-          ? "In ascolto · modello " + modelCode
-          : "In ascolto — aggiornamento continuo";
+        modelCode = ascii(await cmd(get(0xc9, 0x88))) || "";
+        renderTagline();
         const fw = await cmd([0xc0, 0x00, 0x00, crc8([0, 0])]);
         document.getElementById("fw").textContent =
           "firmware " +
@@ -1189,7 +1270,8 @@
         put("vibration", val8(await cmd([0xc9, 0x00, 0x23, 0xe9])));
         put("flexbattery", val8(await cmd([0xc9, 0x00, 0x25, 0xfb])));
         const fp = await cmd([0xd2, 0x05, 0x22, 0x03, 0x00, 0x00, 0x00, 0x17]);
-        put("flexpuff", fp ? (val8(fp) ? "attivo" : "spento") : "—");
+        fpRaw = fp ? val8(fp) : null;
+        renderFp();
         put(
           "autostart",
           val8(await cmd([0xc9, 0x07, 0x24, 0x01, 0x00, 0x00, 0x00, 0x22])),
@@ -1203,24 +1285,10 @@
         putMetric("battery", u16(await cmd(get(0xc0, 0x90)), 0), "%");
         putMetric("voltageM", u16(await cmd(get(0xc9, 0x83)), 0), "mV");
         putMetric("temp", u16(await cmd(get(0xc0, 0x84)), 0), "");
-        const s = val8(await cmd(get(0xc0, 0x81)));
-        put(
-          "stick",
-          s == null
-            ? "—"
-            : s === 0x16
-              ? "stick inserito"
-              : s === 0x01
-                ? "vuoto"
-                : "0x" + s.toString(16),
-        );
-        const e = u16(await cmd(get(0xc0, 0x82)), 0);
-        document.getElementById("errors").textContent =
-          e == null
-            ? ""
-            : e === 0
-              ? "nessun errore"
-              : "errore 0x" + e.toString(16);
+        stickRaw = val8(await cmd(get(0xc0, 0x81)));
+        renderStick();
+        errRaw = u16(await cmd(get(0xc0, 0x82)), 0);
+        renderErrors();
         const c = await cmd(get(0xc9, 0x86));
         lastSticks = u16(c, 0);
         lastPuffs = u16(c, 10);
@@ -1266,18 +1334,7 @@
         const price = parseFloat(document.getElementById("packPrice").value);
         const size = parseInt(document.getElementById("packSize").value, 10);
         const perStick = price && size ? price / size : null;
-        // le vibrazioni di test gonfiano il contatore stick del device: le sottraggo
-        const phantom = Math.max(0, parseInt(document.getElementById("phantom").value, 10) || 0);
-        const realSticks =
-          lastSticks == null ? null : Math.max(0, lastSticks - phantom);
-        const note = document.getElementById("phantomNote");
-        if (phantom > 0 && lastSticks != null) {
-          note.hidden = false;
-          note.textContent =
-            "— " + phantom + " di test = " + realSticks + " reali";
-        } else {
-          note.hidden = true;
-        }
+        const realSticks = lastSticks;
         const el = document.getElementById("spend");
         if (realSticks == null || !perStick) {
           el.textContent = "—";
@@ -1314,34 +1371,6 @@
             schedule();
           }, 1500);
       }
-      async function vibrate() {
-        // NON esiste un comando "vibra" su ILUMA: il comando 45 22 del repo di
-        // riferimento viene accettato ma ignorato. Il device vibra ai PROPRI
-        // eventi, quindi gli si scrive lo stato "stick inserito" (sub 0x81) e
-        // subito dopo si ripristina lo stato reale.
-        // ATTENZIONE: ogni impulso incrementa di 1 il contatore stick a vita.
-        log("vibrazione: scrittura di stato 0x81");
-        const r = await cmd([0xc0, 0x01, 0x20, crc8([0x01, 0x20])]);
-        if (!r) {
-          log("vibrazione: nessuna risposta alla lettura di stato");
-          return;
-        }
-        const st = [r[4], r[5], r[6], r[7]];
-        const wr = (b) => {
-          const app = [0x45, 0x20, ...b];
-          return cmd([0xc0, ...app, crc8(app)]);
-        };
-        await wr([0x16, st[1], st[2], st[3]]);
-        // ogni impulso incrementa il contatore stick del device: lo scalo dalla spesa
-        const ph = document.getElementById("phantom");
-        ph.value = (parseInt(ph.value, 10) || 0) + 1;
-        computeSpend();
-        setTimeout(() => {
-          wr(st);
-          log("vibrazione: stato ripristinato");
-        }, 800);
-      }
-
       const stage = document.querySelector(".stage"),
         dev = document.getElementById("device");
       if (!window.matchMedia("(prefers-reduced-motion:reduce)").matches) {
@@ -1362,20 +1391,60 @@
       }
 
       document.getElementById("connect").onclick = connect;
-      document.getElementById("vibrate").onclick = vibrate;
       document.getElementById("auto").onchange = schedule;
       document.getElementById("packPrice").oninput = computeSpend;
       document.getElementById("packSize").oninput = computeSpend;
-      document.getElementById("phantom").oninput = computeSpend;
-      (function initCurrency() {
-        const sel = document.getElementById("currency");
-        sel.value = currency;
-        sel.onchange = () => {
-          currency = sel.value;
-          try { localStorage.setItem("iqos_ccy", currency); } catch (e) {}
-          computeSpend();
+
+      // dropdown custom generico: bottone + menu, scelta con callback
+      function wireDropdown(id, value, onPick, labelFor) {
+        const dd = document.getElementById(id);
+        const btn = dd.querySelector(".dd-btn");
+        const menu = dd.querySelector(".dd-menu");
+        function sync(v) {
+          btn.textContent = labelFor ? labelFor(v) : v;
+          menu.querySelectorAll("li").forEach((li) =>
+            li.setAttribute("aria-selected", li.dataset.v === v),
+          );
+        }
+        btn.onclick = (ev) => {
+          ev.stopPropagation();
+          const open = menu.hidden;
+          document.querySelectorAll(".dd-menu").forEach((m) => (m.hidden = true));
+          document.querySelectorAll(".dd").forEach((d) => d.classList.remove("open"));
+          menu.hidden = !open;
+          dd.classList.toggle("open", open);
         };
-      })();
+        menu.querySelectorAll("li").forEach((li) => {
+          li.onclick = () => {
+            menu.hidden = true;
+            dd.classList.remove("open");
+            sync(li.dataset.v);
+            onPick(li.dataset.v);
+          };
+        });
+        sync(value);
+      }
+      document.addEventListener("click", () => {
+        document.querySelectorAll(".dd-menu").forEach((m) => (m.hidden = true));
+        document.querySelectorAll(".dd").forEach((d) => d.classList.remove("open"));
+      });
+
+      wireDropdown("ddCcy", currency, (v) => {
+        currency = v;
+        try { localStorage.setItem("iqos_ccy", v); } catch (e) {}
+        computeSpend();
+      });
+      wireDropdown(
+        "ddLang", lang,
+        (v) => {
+          lang = v;
+          try { localStorage.setItem("iqos_lang", v); } catch (e) {}
+          applyLang();
+          computeSpend();
+        },
+        (v) => v.toUpperCase(),
+      );
+      applyLang();
       document.getElementById("details").onclick = () => openPanel(true);
       document.getElementById("closePanel").onclick = () => openPanel(false);
       document.getElementById("backdrop").onclick = () => openPanel(false);
